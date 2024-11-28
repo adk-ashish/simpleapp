@@ -1,15 +1,15 @@
-// src/components/SignUpForm.js
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import axios from 'axios';
 
-const SignUpForm = () => {
+const LoginForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
-    confirmPassword: '',
   });
+
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,23 +21,19 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
-      return;
-    }
-
     try {
-      const response = await axios.post('http://localhost:5000/api/users/register', {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
-      alert('User registered successfully!');
+      const response = await axios.post('http://localhost:5000/api/users/login', formData);
+      alert('Login successful!');
       console.log(response.data);
+      // Perform any login actions (e.g., save token, navigate to dashboard)
     } catch (err) {
       console.error(err);
-      alert('Error registering user!');
+      alert('Invalid credentials!');
     }
+  };
+
+  const handleRegisterClick = () => {
+    navigate('/signup'); // Redirect to the signup page
   };
 
   return (
@@ -47,21 +43,7 @@ const SignUpForm = () => {
         className="p-4 bg-secondary rounded shadow"
         style={{ width: '300px' }}
       >
-        <h3 className="text-center mb-3">Sign Up</h3>
-        <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className="form-control"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <h3 className="text-center mb-3">Login</h3>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email
@@ -90,26 +72,19 @@ const SignUpForm = () => {
             required
           />
         </div>
-        <div className="mb-3">
-          <label htmlFor="confirmPassword" className="form-label">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            className="form-control"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary w-100">
-          Sign Up
+        <button type="submit" className="btn btn-primary w-100 mb-2">
+          Login
+        </button>
+        <button
+          type="button"
+          className="btn btn-light w-100"
+          onClick={handleRegisterClick}
+        >
+          Register
         </button>
       </form>
     </div>
   );
 };
 
-export default SignUpForm;
+export default LoginForm;
