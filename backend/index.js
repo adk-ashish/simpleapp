@@ -26,7 +26,9 @@ mongoose
 
 // Routes
 const userRoutes = require('./routes/userRoutes'); // User routes
+const employeeRoutes = require('./routes/employeeRoutes'); //Employee Routes
 app.use('/api/users', userRoutes); // Mount the user routes
+app.use('/api/employees', employeeRoutes); //Employee routes
 
 // Default route
 app.get('/', (req, res) => {
