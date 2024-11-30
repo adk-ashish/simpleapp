@@ -30,8 +30,7 @@ const LoginForm = () => {
         localStorage.setItem('token', response.data.token);  // Store the token 
         
         // Redirect to employee list after successful login
-        <Route path="/create-employee" element={<CreateEmployee />} /> 
-        navigate('/CreateEmployee');  // Redirects to the employee list page
+        navigate('/create-employee');  // Redirects to the employee list page
       }
 
     } catch (err) {
