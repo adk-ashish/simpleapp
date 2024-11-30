@@ -1,19 +1,34 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const cors = require ('cors')
-const userSchema = require('./models/userModel')
+const dotenv = require('dotenv');
+dotenv.config();
+const express = require('express'); // Express framework
+const mongoose = require('mongoose'); // MongoDB ODM
+const cors = require('cors'); // For Cross-Origin Resource Sharing
+const bodyParser = require('body-parser'); // For parsing request bodies
 
-const app = express()
-app.use(cors())
-app.use(express.json())
+// Initialize Express app
+const app = express();
 
-mongoose.connect("mongodb+srv://adhsashish125:3OoQVU05QNoFbBmR@democode.3hldz.mongodb.net/?retryWrites=true&w=majority&appName=democode")
-app.post('/register',(req,res) => {
-    userSchema.create(req.body)
-    .then(users => users.json())
-    .catch(err => res.json(err))
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
 
-})
-app.listen(3001, () => {
-    console.log("Server is Running");
+// MongoDB connection
+const PORT = process.env.PORT || 3001;
+const MONGO_URI = process.env.MONGO_URI;
+console.log(MONGO_URI)
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log('Connected to MongoDB Atlas');
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+  })
+  .catch((err) => console.error('Error connecting to MongoDB:', err));
+
+// Routes
+const userRoutes = require('./routes/userRoutes'); // User routes
+app.use('/api/users', userRoutes); // Mount the user routes
+
+// Default route
+app.get('/', (req, res) => {
+  res.send('API is running...');
 });
