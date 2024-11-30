@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SignUpForm from './Signup';
 import LoginForm from './Login';
+import CreateEmployee from './CreateEmployee';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
           <Route path='/' element={<LoginForm />}></Route>
           <Route path='/signup' element={<SignUpForm />}></Route>
           <Route path='/login' element={<LoginForm />}></Route>
-      </Routes>
+          <Route path="/create-employee" element={<CreateEmployee />} /> 
+          </Routes>
     </BrowserRouter>
   )
 }

@@ -25,7 +25,15 @@ const LoginForm = () => {
       const response = await axios.post('http://localhost:3001/api/users/login', formData);
       alert('Login successful!');
       console.log(response.data);
-      // Perform any login actions (e.g., save token, navigate to dashboard)
+      if (response.data.token) {
+       
+        localStorage.setItem('token', response.data.token);  // Store the token 
+        
+        // Redirect to employee list after successful login
+        <Route path="/create-employee" element={<CreateEmployee />} /> 
+        navigate('/CreateEmployee');  // Redirects to the employee list page
+      }
+
     } catch (err) {
       console.error(err);
       alert('Invalid credentials!');
