@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 
 const CreateEmployee = () => {
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
   const [employee, setEmployee] = useState({
     name: '',
     email: '',
@@ -42,13 +44,28 @@ const CreateEmployee = () => {
       alert("Failed to add employee. Please try again.");
     }
   };
+   
+   const handleLogout = () => {
+    console.log('hi')
+    localStorage.removeItem('authToken'); // Remove token or any authentication data
+    navigate('/login'); // Redirect to login page
+  };
 
   return (
     <div className="d-flex bg-dark text-light min-vh-100">
       <div className="container mt-5">
+ 
+        {/* Header Section with Centered Title and Logout Button */}
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div className="flex-grow-1 text-center">
+            <h2>Create Employee</h2>
+          </div>
+          <button className="btn btn-danger" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
         <div className="d-flex flex-column align-items-center justify-content-center">
-          <h2 className="mb-4">Create Employee</h2>
-
+         
           {/* Employee Form */}
           <form onSubmit={handleSubmit} className="mb-4 p-4 rounded shadow" style={{ width: '100%', maxWidth: '500px' }}>
             <div className="mb-3">
