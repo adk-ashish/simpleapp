@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
 const CreateEmployee = () => {
   const [employee, setEmployee] = useState({
     name: '',
     email: '',
     position: '',
+    salary: '',
   });
 
   const [employeeList, setEmployeeList] = useState([]);
@@ -18,17 +20,27 @@ const CreateEmployee = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add new employee to the employeeList state
-    setEmployeeList([...employeeList, employee]);
-    
-    // Clear the form after submission
-    setEmployee({
-      name: '',
-      email: '',
-      position: '',
-    });
+    try {
+      // Send employee data to the backend
+      const response = await axios.post("http://localhost:3001/api/employees", employee);
+      // Update local state with the new employee
+      setEmployeeList([...employeeList, response.data]);
+
+      // Clear the form
+      setEmployee({
+        name: '',
+        email: '',
+        position: '',
+        salary: '',
+      });
+
+      alert("Employee added successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to add employee. Please try again.");
+    }
   };
 
   return (
@@ -81,6 +93,20 @@ const CreateEmployee = () => {
                 required
               />
             </div>
+            <div className="mb-3">
+              <label htmlFor="salary" className="form-label">
+                Salary
+              </label>
+              <input
+                type="text"
+                className="form-control bg-dark text-light"
+                id="salary"
+                name="salary"
+                value={employee.salary}
+                onChange={handleChange}
+                required
+              />
+            </div>
             <button type="submit" className="btn btn-primary w-100">
               Add Employee
             </button>
@@ -94,6 +120,7 @@ const CreateEmployee = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Position</th>
+                <th>Salary</th>
               </tr>
             </thead>
             <tbody>
@@ -103,6 +130,7 @@ const CreateEmployee = () => {
                     <td>{emp.name}</td>
                     <td>{emp.email}</td>
                     <td>{emp.position}</td>
+                    <td>{emp.salary}</td>
                   </tr>
                 ))
               ) : (
