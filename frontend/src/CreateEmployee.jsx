@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom'; 
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const CreateEmployee = () => {
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const navigate = useNavigate();
   const [employee, setEmployee] = useState({
-    name: '',
-    email: '',
-    position: '',
-    salary: '',
+    name: "",
+    email: "",
+    position: "",
+    salary: "",
   });
 
   const [employeeList, setEmployeeList] = useState([]);
+
+  // Fetch employees from the backend when the component loads
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/api/employees");
+        setEmployeeList(response.data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+        alert("Failed to load employees. Please try again.");
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,10 +47,10 @@ const CreateEmployee = () => {
 
       // Clear the form
       setEmployee({
-        name: '',
-        email: '',
-        position: '',
-        salary: '',
+        name: "",
+        email: "",
+        position: "",
+        salary: "",
       });
 
       alert("Employee added successfully!");
@@ -44,18 +59,15 @@ const CreateEmployee = () => {
       alert("Failed to add employee. Please try again.");
     }
   };
-   
-   const handleLogout = () => {
-    console.log('hi')
-    localStorage.removeItem('authToken'); // Remove token or any authentication data
-    navigate('/login'); // Redirect to login page
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken"); 
+    navigate("/login"); 
   };
 
   return (
     <div className="d-flex bg-dark text-light min-vh-100">
       <div className="container mt-5">
- 
-        {/* Header Section with Centered Title and Logout Button */}
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div className="flex-grow-1 text-center">
             <h2>Create Employee</h2>
@@ -64,10 +76,14 @@ const CreateEmployee = () => {
             Logout
           </button>
         </div>
+
         <div className="d-flex flex-column align-items-center justify-content-center">
-         
           {/* Employee Form */}
-          <form onSubmit={handleSubmit} className="mb-4 p-4 rounded shadow" style={{ width: '100%', maxWidth: '500px' }}>
+          <form
+            onSubmit={handleSubmit}
+            className="mb-4 p-4 rounded shadow"
+            style={{ width: "100%", maxWidth: "500px", backgroundColor: "#343a40" }}
+          >
             <div className="mb-3">
               <label htmlFor="name" className="form-label">
                 Name
@@ -152,7 +168,7 @@ const CreateEmployee = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3" className="text-center">
+                  <td colSpan="4" className="text-center">
                     No employees added yet.
                   </td>
                 </tr>
